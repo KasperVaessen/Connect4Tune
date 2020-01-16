@@ -1,6 +1,6 @@
 let minutes = 0;
 let seconds = 0;
-setInterval(function() {
+let timer = setInterval(function() {
     seconds++;
     if(seconds == 60) {
         minutes++;
@@ -25,3 +25,5 @@ setInterval(function() {
     let el = document.getElementById("timer")
     el.innerHTML = time;
 }, 1000)
+
+module.exports == timer

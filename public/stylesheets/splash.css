@@ -5,9 +5,9 @@ body {
 }
 #slot {
     width: auto;
-    height: 90vh;
-    position: fixed;
-    bottom: -80px;
+    height: 80vh;
+    position: relative;
+    bottom: 0px;
     left: 50px;
 
 }
@@ -24,10 +24,10 @@ body {
 
 #logo {
     width: auto;
-    height: 350px;
-    position: fixed;
-    top: -40px;
-    left: 450px; 
+    height: 40vh;
+    position: relative;
+    top: -5vh;
+    left: 20vw; 
 }
 
 #gamesPlayed {
@@ -49,7 +49,15 @@ body {
 }
 
 #start {
+    position: relative;
+    bottom: 20vh;
+    left: 44%;
+    height: auto;
+    width: 5vw;
+}
+
+#slotBlock {
     position: absolute;
-    top: 600px;
-    left: 287px;
+    left: 0px;
+    bottom: 0px;
 }
