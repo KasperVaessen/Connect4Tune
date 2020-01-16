@@ -1,19 +1,55 @@
-.circle {
-    position: absolute;
-    left: 60px;
-    top: 60px;
-    background-color: white;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+body {
+    background-image: url('../images/background.jpg');
+    background-size: cover;
+    overflow-y: hidden;
+}
+#slot {
+    width: auto;
+    height: 90vh;
+    position: fixed;
+    bottom: -80px;
+    left: 50px;
+
 }
 
-.gamepanel {
-    position: absolute;
-    left: 100px;
-    top: 50px;
-    width: 400px;
+/* fonts */
+@font-face {
+    font-family: myFirstFont;
+    src: url(../Casino.ttf);
+  }
+.CasinoFont {
+    font-family: myFirstFont;
+    font-size: 150px;
+}
+
+#logo {
+    width: auto;
     height: 350px;
-    background-color: blue;
-    border-radius: 5%;
+    position: fixed;
+    top: -40px;
+    left: 450px; 
+}
+
+#gamesPlayed {
+    position: fixed;
+    top: 250px;
+    right: 400px;
+}
+
+#avgTime {
+    position: fixed;
+    top: 400px;
+    right: 600px;
+}
+
+#playersOnline {
+    position: fixed;
+    top: 550px;
+    right: 400px;
+}
+
+#start {
+    position: absolute;
+    top: 600px;
+    left: 287px;
 }
