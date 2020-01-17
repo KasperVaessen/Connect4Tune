@@ -1,0 +1,96 @@
+body {
+    background-image: url("../images/wallpaper.jpg");
+    background-repeat: no-repeat, repeat;
+    background-size: cover;
+    display: flex;
+    overflow-y: hidden;
+}
+
+.board {
+    padding-top: 10px;
+    width: 35vw;
+    margin-left: 15%;
+    height: 100vh;
+    background-color: red;
+    text-align: center;
+    box-shadow: 13px 12px 25px;
+}
+.boardheader {
+    height: 20%
+}
+
+.boardtitle {
+    padding-top: 5%;
+    border: 10px;
+    border-style: solid;
+    padding-bottom: 5%;
+    margin-left: 40px;
+    margin-right: 40px;
+    margin-top: 10px;
+    font-size: 30px;
+    border-color: #ffd700;
+    color: ffd700;
+}
+
+.tokens {
+    height: 50%;
+    background-color: blue;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+.tokenplace:hover{
+    box-shadow: 7px 7px;
+}
+
+.tokenplace {
+    border-radius: 100%;
+    background-color: white;
+    height: 15%;
+    width: 12%;
+    display: inline-block;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-bottom: 2px;
+}
+
+.boardfooter1 {
+    width: 80%;
+    border-style: solid;
+    height: 1000px;
+    margin-left: 10%;
+    margin-right: 10%;
+   }
+
+   .boardfooter2 {
+    border-style: solid;
+    margin-top: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+    height: 1000px;
+    padding-top: 10%;
+    
+   }
+   
+   .backbutton a{
+    border-style: solid;
+    padding: 8px 19px;
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+    color: #ffd700;
+   }
+
+.stats{
+    float: right;
+    width: 30vw;
+    padding-left: 20%;
+}
+
+.statsSub{
+    color: white;
+    padding-top: 100px;
+    font-size: 20px;
+}
