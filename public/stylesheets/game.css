@@ -94,3 +94,9 @@ body {
     padding-top: 100px;
     font-size: 20px;
 }
+
+#handle {
+    position: absolute;
+    left: 50vw;
+    top: 10vh;
+}
