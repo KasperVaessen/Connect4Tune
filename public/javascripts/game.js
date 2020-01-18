@@ -149,4 +149,6 @@ $(document).ready(function(){
             audio.currentTime = 0
         }
     }
+    
+    var socket = new WebSocket("ws://localhost:3000");
   });
