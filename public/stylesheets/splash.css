@@ -15,11 +15,12 @@ body {
 /* fonts */
 @font-face {
     font-family: myFirstFont;
-    src: url(../Casino.ttf);
+    src: url(../media/Casino.otf);
   }
 .CasinoFont {
     font-family: myFirstFont;
-    font-size: 150px;
+    font-size: 50px;
+    color: white;
 }
 
 #logo {
@@ -33,27 +34,36 @@ body {
 #gamesPlayed {
     position: fixed;
     top: 250px;
-    right: 400px;
+    right: 300px;
 }
 
-#avgTime {
+#recentTime {
     position: fixed;
     top: 400px;
-    right: 600px;
+    right: 500px;
 }
 
 #playersOnline {
     position: fixed;
     top: 550px;
-    right: 400px;
+    right: 300px;
 }
 
 #start {
     position: relative;
     bottom: 20vh;
-    left: 44%;
+    left: 35%;
     height: auto;
     width: 5vw;
+}
+
+#go {
+    background-color: red;
+    font-size: 30px;
+}
+
+#go:hover {
+    background-color: rgb(145, 0, 0);
 }
 
 #slotBlock {

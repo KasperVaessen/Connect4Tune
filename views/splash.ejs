@@ -13,14 +13,18 @@
             <div id='slotBlock'>
                 <img id="slot" src="images/slot.png">
                 <form id="start" action="/game">
-                    <input type="submit" value="Start Game">
+                    <input id = 'go' class='CasinoFont' type="submit" value="Start Game">
                 </form>
             </div>
-            <div id="gamesPlayed">
+            <div id="gamesPlayed" class = 'CasinoFont'>
                 <%= gamesCompleted %> Games Played
             </div>
-            <div id="avgTime"></div>
-            <div id="playersOnline"></div>
+            <div id="recentTime" class = 'CasinoFont'>
+                Last Game Took <%= recentTime %> 
+            </div>
+            <div id="playersOnline" class= 'CasinoFont'>
+                <%= onlinePlayers %> People Playing
+            </div>
 
         </main>
 
