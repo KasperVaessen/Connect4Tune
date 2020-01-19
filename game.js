@@ -1,75 +1,105 @@
 var game = function(gameID) {
-    this.playerA = null;
-    this.playerB = null;
+    this.red = null;
+    this.yellow = null;
     this.id = gameID;
-    this.wordToGuess = null; //first player to join the game, can set the word
-    this.gameState = "0 JOINT"; //"A" means A won, "B" means B won, "ABORTED" means the game was aborted
+    this.color = 'red';
+    this.turns = 0;
+    this.gameState = "0 JOINT"; //"RED" means A won, "YELLOW" means B won, "ABORTED" means the game was aborted
+    this.tokenArray = [
+      ['white','white','white','white','white','white'],
+      ['white','white','white','white','white','white'],
+      ['white','white','white','white','white','white'],
+      ['white','white','white','white','white','white'],
+      ['white','white','white','white','white','white'],
+      ['white','white','white','white','white','white'],
+      ['white','white','white','white','white','white'],
+    ]
+    // this.tokenArray = new Array(7);
+    // for(var x = 0; x < 7; x++){
+    //   this.tokenArray[x] = new Array(white,white,white,white,white,white);   
+    // }
   };
 
-game.prototype.transitionStates = {};
-game.prototype.transitionStates["0 JOINT"] = 0;
-game.prototype.transitionStates["1 JOINT"] = 1;
-game.prototype.transitionStates["2 JOINT"] = 2;
-game.prototype.transitionStates["TOKEN "] = 3;
-game.prototype.transitionStates["A"] = 4; //A won
-game.prototype.transitionStates["B"] = 5; //B won
-game.prototype.transitionStates["ABORTED"] = 6;
 
-game.prototype.transitionMatrix = [
-  [0, 1, 0, 0, 0, 0, 0], //0 JOINT
-  [1, 0, 1, 0, 0, 0, 0], //1 JOINT
-  [0, 0, 0, 1, 0, 0, 1], //2 JOINT (note: once we have two players, there is no way back!)
-  [0, 0, 0, 1, 1, 1, 1], //CHAR GUESSED
-  [0, 0, 0, 0, 0, 0, 0], //A WON
-  [0, 0, 0, 0, 0, 0, 0], //B WON
-  [0, 0, 0, 0, 0, 0, 0] //ABORTED
-];
-
-game.prototype.isValidTransition = function(from, to) {
-  console.assert(
-    typeof from == "string",
-    "%s: Expecting a string, got a %s",
-    arguments.callee.name,
-    typeof from
-  );
-  console.assert(
-    typeof to == "string",
-    "%s: Expecting a string, got a %s",
-    arguments.callee.name,
-    typeof to
-  );
-  console.assert(
-    from in game.prototype.transitionStates == true,
-    "%s: Expecting %s to be a valid transition state",
-    arguments.callee.name,
-    from
-  );
-  console.assert(
-    to in game.prototype.transitionStates == true,
-    "%s: Expecting %s to be a valid transition state",
-    arguments.callee.name,
-    to
-  );
-
-  let i, j;
-  if (!(from in game.prototype.transitionStates)) {
-    return false;
+game.prototype.changeColor = function(){
+  if (this.color == "red"){
+      this.color = "yellow";
   } else {
-    i = game.prototype.transitionStates[from];
+      this.color = "red";
   }
+}
 
-  if (!(to in game.prototype.transitionStates)) {
-    return false;
-  } else {
-    j = game.prototype.transitionStates[to];
+game.prototype.getColumn = function(id){
+  return id % 7;
+}
+
+game.prototype.addToColumn = function(id) {
+  var column = game.prototype.getColumn(id);
+ 
+  for (var i = 5; i >= 0; i--){
+      if(this.tokenArray[column][i] == 'white'){
+          this.tokenArray[column][i] = this.color;
+          //console.log(this.tokenArray)
+          this.checkWin(column, i);
+          this.changeColor();
+          this.turns++;
+          break;  
+      }
+      if (i == 0){
+          if(this.turns > 41){
+            this.setStatus('TIE')
+          }
+      }
   }
+}
 
-  return game.prototype.transitionMatrix[i][j] > 0;
-};
+game.prototype.checkWin = function(column, index){
+  var horzOffset1 = this.inLine(-1, 0, column, index);
+  var horzOffset2 = this.inLine(1, 0, column, index);
+  var vertOffset1 = this.inLine(0, 1, column, index);
+  var vertOffset2 = this.inLine(0, -1, column, index);
+  var cross1Offset1 = this.inLine(1, 1, column, index);
+  var cross1Offset2 = this.inLine(-1, -1, column, index);
+  var cross2Offset1 = this.inLine(1, -1, column, index);
+  var cross2Offset2 = this.inLine(-1, 1, column, index);
+  if(this.checkOffset(horzOffset1, horzOffset2) || this.checkOffset(vertOffset1, vertOffset2) || this.checkOffset(cross1Offset1, cross1Offset2) || this.checkOffset(cross2Offset1, cross2Offset2)){
+      console.log(this.tokenArray)
+      this.setStatus(this.color.toUpperCase() + " HAS WON");
+  }
+}
 
-game.prototype.isValidState = function(s) {
-  return s in game.prototype.transitionStates;
-};
+game.prototype.checkOffset = function(offset1, offset2){
+  if (offset1 + offset2 >= 1){
+      console.log("Offset 1: " + offset1 + ". Offset2: " + offset2);
+  }
+  if (offset1 + offset2 >= 3){
+      return true;
+  }
+  return false;
+}
+
+game.prototype.inLine = function(xOffset, yOffset, column, index){
+  console.log(this.tokenArray)
+  if (!((Math.abs(xOffset) == 1 || Math.abs(xOffset) == 0) && (Math.abs(yOffset) == 1) || (Math.abs(yOffset) == 0))){
+      console.log("line offset bigger than 1");
+      return 0;
+  }
+  var totalInline = 0;
+  var column = column;
+  var index = index;
+  while(((column + xOffset >= 0) && (column + xOffset < 7)) && ((index + yOffset >= 0) && (index + yOffset < 6))){
+      column = column + xOffset;
+      index = index + yOffset;
+      console.log("CHECK: " + column, index + " Offset: " + xOffset, yOffset);
+      if (this.tokenArray[column][index] == this.color){
+          console.log("MATCH: " + column + " " + index);
+          totalInline++;
+      } else {
+          break;
+      }
+  }
+  return totalInline;
+}
 
 game.prototype.setStatus = function(w) {
   console.assert(
@@ -79,20 +109,13 @@ game.prototype.setStatus = function(w) {
     typeof w
   );
 
-  if (
-    game.prototype.isValidState(w) &&
-    game.prototype.isValidTransition(this.gameState, w)
-  ) {
-    this.gameState = w;
-    console.log("[STATUS] %s", this.gameState);
-  } else {
-    return new Error(
-      "Impossible status change from %s to %s",
-      this.gameState,
-      w
-    );
-  }
+  this.gameState = w;
+  console.log("[STATUS] %s", this.gameState);
 };
+
+game.prototype.hasEnded = function() {
+  return this.gameState.includes('HAS WON') || this.gameState.includes('TIE')
+}
 
 
 game.prototype.hasTwoConnectedPlayers = function() {
@@ -118,17 +141,19 @@ game.prototype.addPlayer = function(p) {
    * revise the game state
    */
 
-  var error = this.setStatus("1 JOINT");
-  if (error instanceof Error) {
-    this.setStatus("2 JOINT");
+  if(this.gameState == '1 JOINT') {
+    this.setStatus("2 JOINT")
+  }
+  else {
+    this.setStatus("1 JOINT")
   }
 
-  if (this.playerA == null) {
-    this.playerA = p;
-    return "A";
+  if (this.red == null) {
+    this.red = p;
+    return "RED";
   } else {
-    this.playerB = p;
-    return "B";
+    this.yellow = p;
+    return "YELLOW";
   }
 };
 

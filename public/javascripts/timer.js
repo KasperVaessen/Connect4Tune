@@ -25,5 +25,3 @@ let timer = setInterval(function() {
     let el = document.getElementById("timer")
     el.innerHTML = time;
 }, 1000)
-
-module.exports == timer

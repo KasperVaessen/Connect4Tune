@@ -56,6 +56,8 @@ setInterval(function() {
 var currentGame = new Game(gameStatus.gamesInitialized++);
 var connectionID = 0; //each websocket receives a unique ID
 
+
+
 wss.on('connection', function connection(ws) {
 
   /*
@@ -75,12 +77,6 @@ wss.on('connection', function connection(ws) {
   );
 
   /*
-   * inform the client about its assigned player type
-   */
-  con.send(playerType == "A" ? messages.S_PLAYER_A : messages.S_PLAYER_B);
-
-
-  /*
    * once we have two players, there is no way back;
    * a new game object is created;
    * if a player now leaves, the game is aborted (player is not preplaced)
@@ -95,44 +91,37 @@ wss.on('connection', function connection(ws) {
   //  *  2. determine the opposing player OP
   //  *  3. send the message to OP
   //  */
-  // con.on("message", function incoming(message) {
-  //   let oMsg = JSON.parse(message);
+  con.on("message", function incoming(message) {
+    let oMsg = JSON.parse(message);
+    let gameObj = websockets[conid];
+    let isRed = gameObj.red == con ? true : false;
+    let isYellow = gameObj.yellow == con ? true : false;
 
-  //   let gameObj = websockets[con.id];
-  //   let isPlayerA = gameObj.playerA == con ? true : false;
+    if(gameObj.hasTwoConnectedPlayers()) {
+      if(isRed && gameObj.color == 'red') {
+        gameObj.addToColumn(oMsg)
+        let field = gameObj.tokenArray;
+        console.log(field);
+        gameObj.red.send(JSON.stringify(field))
+        gameObj.yellow.send(JSON.stringify(field))
+      }
 
-  //   if (isPlayerA) {
-  //     /*
-  //      * player A cannot do a lot, just send the target word;
-  //      * if player B is already available, send message to B
-  //      */
-  //     if (oMsg.type == messages.T_TARGET_WORD) {
-  //       gameObj.setWord(oMsg.data);
+      if(isYellow && gameObj.color == 'yellow') {
+        gameObj.addToColumn(oMsg)
+        let field = gameObj.tokenArray;
+        console.log(field);
+        gameObj.red.send(JSON.stringify(field))
+        gameObj.yellow.send(JSON.stringify(field))
+      }
 
-  //       if (gameObj.hasTwoConnectedPlayers()) {
-  //         gameObj.playerB.send(message);
-  //       }
-  //     }
-  //   } else {
-  //     /*
-  //      * player B can make a guess;
-  //      * this guess is forwarded to A
-  //      */
-  //     if (oMsg.type == messages.T_MAKE_A_GUESS) {
-  //       gameObj.playerA.send(message);
-  //       gameObj.setStatus("CHAR GUESSED");
-  //     }
-
-  //     /*
-  //      * player B can state who won/lost
-  //      */
-  //     if (oMsg.type == messages.T_GAME_WON_BY) {
-  //       gameObj.setStatus(oMsg.data);
-  //       //game was won by somebody, update statistics
-  //       gameStatus.gamesCompleted++;
-  //     }
-  //   }
-  // });
+      if(gameObj.hasEnded()) {
+        gameStatus.gamesCompleted++
+        gameObj.red.send(gameObj.gameState)
+        gameObj.yellow.send(gameObj.gameState)
+      }
+    }
+  }) 
+ 
 
   con.on("close", function(code) {
     /*
@@ -148,29 +137,27 @@ wss.on('connection', function connection(ws) {
        */
       let gameObj = websockets[conid];
 
-      if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
-        gameObj.setStatus("ABORTED");
+      gameObj.setStatus("ABORTED");
 
-        /*
-         * determine whose connection remains open;
-         * close it
-         */
-        try {
-          gameObj.playerA.close();
-          gameObj.playerA = null;
-        } catch (e) {
-          console.log("Player A closing: " + e);
-        }
+      /*
+        * determine whose connection remains open;
+        * close it
+        */
+      try {
+        gameObj.red.close();
+        gameObj.red = null;
+      } catch (e) {
+        console.log("Red closing: " + e);
+      }
 
-        try {
-          gameObj.playerB.close();
-          gameObj.playerB = null;
-        } catch (e) {
-          console.log("Player B closing: " + e);
-        }
+      try {
+        gameObj.yellow.close();
+        gameObj.yellow = null;
+      } catch (e) {
+        console.log("Yellow closing: " + e);
       }
     }
   });
 });
 
-server.listen(port)
+server.listen(port);
