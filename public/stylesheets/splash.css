@@ -37,10 +37,10 @@ body {
     right: 300px;
 }
 
-#recentTime {
+#upSince {
     position: fixed;
     top: 400px;
-    right: 500px;
+    right: 300px;
 }
 
 #playersOnline {
@@ -70,4 +70,11 @@ body {
     position: absolute;
     left: 0px;
     bottom: 0px;
+}
+
+#visits {
+    position: absolute;
+    left:0;
+    top:0;
+    font-size: 40px;
 }

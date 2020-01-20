@@ -10,12 +10,31 @@ var indexRouter = require('./routes/index');
 var Game = require('./game')
 var messages = require('./public/javascripts/messages')
 
-var gameStatus = require("./stattracker")
+
 
 var port = process.argv[2];
 var app = express();
 
+//stat variables
+var gameStatus = require("./stattracker")
 var players = 0;
+
+function formatDate(date) {
+  var monthNames = [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
+  ];
+
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+
+  return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
+
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -31,7 +50,7 @@ app.get("/game", indexRouter);
 app.get("/", (req, res) => {
   res.render("splash.ejs", {
     gamesCompleted: gameStatus.gamesCompleted,
-    recentTime: gameStatus.recentTime,
+    recentTime: formatDate(new Date(gameStatus.since)),
     onlinePlayers: players
   });
 });
@@ -65,13 +84,13 @@ wss.on('connection', function connection(ws) {
    */
   players++
   let con = ws;
-  let conid = connectionID++;
+  con.id = connectionID++;
   let playerType = currentGame.addPlayer(con);
-  websockets[conid] = currentGame;
+  websockets[con.id] = currentGame;
 
   console.log(
     "Player %s placed in game %s as %s",
-    conid,
+    con.id,
     currentGame.id,
     playerType
   );
@@ -82,6 +101,8 @@ wss.on('connection', function connection(ws) {
    * if a player now leaves, the game is aborted (player is not preplaced)
    */
   if (currentGame.hasTwoConnectedPlayers()) {
+    currentGame.red.send('JOINED')
+    currentGame.yellow.send('START')
     currentGame = new Game(gameStatus.gamesInitialized++);
   }
 
@@ -93,7 +114,7 @@ wss.on('connection', function connection(ws) {
   //  */
   con.on("message", function incoming(message) {
     let oMsg = JSON.parse(message);
-    let gameObj = websockets[conid];
+    let gameObj = websockets[con.id];
     let isRed = gameObj.red == con ? true : false;
     let isYellow = gameObj.yellow == con ? true : false;
 
@@ -128,14 +149,14 @@ wss.on('connection', function connection(ws) {
      * code 1001 means almost always closing initiated by the client;
      * source: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
      */
-    console.log(conid + " disconnected ...");
+    console.log(con.id + " disconnected ...");
     players--;
 
     if (code == "1001") {
       /*
        * if possible, abort the game; if not, the game is already completed
        */
-      let gameObj = websockets[conid];
+      let gameObj = websockets[con.id];
 
       gameObj.setStatus("ABORTED");
 

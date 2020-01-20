@@ -57,13 +57,18 @@ $(document).ready(function(){
         }
     }
 
-    var socket = new WebSocket("ws://192.168.178.130:3000");
+    var socket = new WebSocket("ws://localhost:3000");
     socket.onmessage = function(event) {
         let incomingMsg = event.data;
-        
+        if(incomingMsg == 'START') {
+            alert("You joined, you're yellow, red is now placing")
+        }
+        if(incomingMsg == 'JOINED') {
+            alert("Someone joined, you're red, you can place")
+        }
         if(incomingMsg.includes('HAS WON') || incomingMsg.includes('TIE')) {
             alert(incomingMsg)
-            socket.close()
+            //socket.close()
         }
         else {
             let array = JSON.parse(incomingMsg)
