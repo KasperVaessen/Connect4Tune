@@ -57,7 +57,7 @@ $(document).ready(function(){
         }
     }
 
-    var socket = new WebSocket("ws://192.168.178.130:3000");
+    var socket = new WebSocket("ws://localhost:3000");
     socket.onmessage = function(event) {
         let incomingMsg = event.data;
         
