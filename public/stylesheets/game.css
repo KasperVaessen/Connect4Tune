@@ -15,6 +15,7 @@ body {
     text-align: center;
     box-shadow: 13px 12px 25px;
 }
+
 .boardheader {
     height: 20%
 }
@@ -100,8 +101,18 @@ body {
     font-size: 20px;
 }
 
+.statsSub::before{
+    color:grey;
+}
+
 #handle {
     position: absolute;
     left: 50vw;
     top: 10vh;
+}
+
+#handle:hover{
+    -webkit-transform: scaleY(-1);
+  transform: scaleY(-1);
+  top:45vh;
 }
