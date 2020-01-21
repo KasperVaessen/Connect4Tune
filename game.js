@@ -14,10 +14,6 @@ var game = function(gameID) {
       ['white','white','white','white','white','white'],
       ['white','white','white','white','white','white'],
     ]
-    // this.tokenArray = new Array(7);
-    // for(var x = 0; x < 7; x++){
-    //   this.tokenArray[x] = new Array(white,white,white,white,white,white);   
-    // }
   };
 
 
@@ -63,7 +59,7 @@ game.prototype.checkWin = function(column, index){
   var cross2Offset1 = this.inLine(1, -1, column, index);
   var cross2Offset2 = this.inLine(-1, 1, column, index);
   if(this.checkOffset(horzOffset1, horzOffset2) || this.checkOffset(vertOffset1, vertOffset2) || this.checkOffset(cross1Offset1, cross1Offset2) || this.checkOffset(cross2Offset1, cross2Offset2)){
-      console.log(this.tokenArray)
+      //console.log(this.tokenArray)
       this.setStatus(this.color.toUpperCase() + " HAS WON");
   }
 }
@@ -79,9 +75,9 @@ game.prototype.checkOffset = function(offset1, offset2){
 }
 
 game.prototype.inLine = function(xOffset, yOffset, column, index){
-  console.log(this.tokenArray)
+  //console.log(this.tokenArray)
   if (!((Math.abs(xOffset) == 1 || Math.abs(xOffset) == 0) && (Math.abs(yOffset) == 1) || (Math.abs(yOffset) == 0))){
-      console.log("line offset bigger than 1");
+      //console.log("line offset bigger than 1");
       return 0;
   }
   var totalInline = 0;
@@ -90,9 +86,9 @@ game.prototype.inLine = function(xOffset, yOffset, column, index){
   while(((column + xOffset >= 0) && (column + xOffset < 7)) && ((index + yOffset >= 0) && (index + yOffset < 6))){
       column = column + xOffset;
       index = index + yOffset;
-      console.log("CHECK: " + column, index + " Offset: " + xOffset, yOffset);
+      //console.log("CHECK: " + column, index + " Offset: " + xOffset, yOffset);
       if (this.tokenArray[column][index] == this.color){
-          console.log("MATCH: " + column + " " + index);
+          //console.log("MATCH: " + column + " " + index);
           totalInline++;
       } else {
           break;
@@ -129,13 +125,6 @@ game.prototype.addPlayer = function(p) {
     arguments.callee.name,
     typeof p
   );
-
-  if (this.gameState != "0 JOINT" && this.gameState != "1 JOINT") {
-    return new Error(
-      "Invalid call to addPlayer, current state is %s",
-      this.gameState
-    );
-  }
 
   /*
    * revise the game state
